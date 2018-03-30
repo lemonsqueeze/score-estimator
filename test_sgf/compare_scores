@@ -1,0 +1,25 @@
+#!/bin/sh
+# compare sgf and pachi uct estimator scores on a game collection:
+# - run score_game_collection first to get estimator scores
+# - run game_collection_infos to extract sgf scores (.info files)
+# - run this to compare scores
+
+matches=0
+for f in *.uct; do    
+    info=`basename $f .uct`.info
+    score=`cat $f | grep 'Official score' | cut -d' ' -f3`
+    sgf_score=`cat $info | grep 'num result' | cut -d' ' -f3`
+    #echo "score: $score    sgf_score: $sgf_score"
+
+    if [ "$score" = "$sgf_score" ]; then
+        echo "$f ok";  matches=$(( $matches + 1 ))
+    else
+        echo "$f differs: $score != $sgf_score (sgf)"
+    fi
+done
+
+total=`ls *.uct | wc -l`
+differ=$(( $total - $matches))
+
+echo ""
+echo "$total games,  $matches matches,  $differ mismatch"

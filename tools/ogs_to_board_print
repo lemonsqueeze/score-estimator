@@ -1,0 +1,15 @@
+#!/bin/sh
+# Convert ogs estimator file.game to ascii board diagram
+# Usage: ogs_to_board_print file.game
+
+boardsize=`grep -A 100 player_to_move < "$1" | tail -n +2 | wc -l `
+y=$boardsize
+
+echo "Move:  1  Komi: 0.5  Handicap: 0  Captures B: 0  W: 0"
+
+grep -A 100 player_to_move < "$1" | tail -n +2 |
+sed -e 's/-1/O/g' -e 's/ 0/./g' -e 's/ 1/X/g' -e 's/^/ | /' -e 's/$/ |/' |
+while read f; do
+    printf "%2i $f\n" $y
+    y=$(($y - 1))
+done

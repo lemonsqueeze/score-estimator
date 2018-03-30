@@ -1,0 +1,25 @@
+#!/bin/sh
+# run estimator on a collection of scored games and check scores.
+# estimator output is saved to .uct file for each sgf.
+# dependencies: see sgf_estimator.
+
+dir=`dirname "$0"`/..
+
+overwrite=""
+if [ "`echo *.uct`" != "*.uct" ]; then
+    echo "Some games have already been scored. "
+    echo -n "Overwrite prev results (y/n) ? ";  read overwrite
+fi
+
+for f in *.sgf ; do
+    echo "$f"
+
+    out=`basename "$f" .sgf`.uct
+    if [ "$overwrite" != "y" ] && [ -f $out ]; then
+	echo "skipping";  continue;
+    fi
+
+    $dir/test_sgf/sgf_estimator "$f" | tee "$out" | grep :
+    
+    echo ""
+done
