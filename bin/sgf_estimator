@@ -1,0 +1,45 @@
+#!/bin/sh
+# usage: sgf_estimator <ogs|pachi|gnugo> <file.sgf>
+#
+# run a score estimator on sgf file and score game.
+# ownermap in the output is official ownermap after scoring
+# (!= mc ownermap if unfinished game or unclear areas).
+# raw estimator output is saved to file.est.raw
+# needs pachi sources + build (dcnn not needed)
+
+set -e
+
+die() {  echo "$@"; exit 1;  }
+
+dir=`dirname "$0"`/..
+est="$1";  shift
+estimator="$dir/estimators/$est/estimator"
+[ -f "$estimator" ] || die "$estimator: not found"
+
+# Check tools from Pachi
+pdir="$dir/estimators/pachi"
+[ -n "$PACHI_DIR" ] && pdir="$PACHI_DIR"
+[ -d "$pdir" ]       || die "pachi directory not found. Please run get_estimators or set PACHI_DIR."
+[ -f "$pdir/estimator" ] || die "build pachi first (dcnn not needed)."
+[ -f "$pdir/tools/gtp2board_print" ] || die "bad pachi repo, we need gtp2board_print."
+
+
+# Game rules
+rules=`perl -ne <"$1" '/RU\[([^]]*)\]/ && print lc($1) . "\n";'`
+
+board=`mktemp`
+ogs=`mktemp`
+$pdir/tools/sgf2gtp.pl < "$1" |
+$pdir/tools/gtp2board_print   | tee $board |
+$dir/tools/board_print_to_ogs  >$ogs
+
+# Find stuff we need to score from board diagram
+komi=` grep "Move:" <$board | sed -e 's/.*Komi: \([0-9.-]\+\).*/\1/'`
+handi=`grep "Move:" <$board | sed -e 's/.*Handicap: \([0-9]\+\).*/\1/'`
+capb=` grep "Move:" <$board | sed -e 's/.*Captures B: \([0-9]\+\).*/\1/'`
+capw=` grep "Move:" <$board | sed -e 's/.* W: \([0-9]\+\).*/\1/'`
+
+raw=`basename "$1" .sgf`.$est.raw        # raw estimator output
+$estimator $ogs     >$raw                # don't use | tee $raw | here ...
+$dir/src/score_game -r $rules -k $komi -a $handi -b $capb -w $capw  <$raw
+rm $board $ogs

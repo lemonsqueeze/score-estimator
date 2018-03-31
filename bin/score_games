@@ -1,0 +1,32 @@
+#!/bin/sh
+# run an estimator on a collection of scored games and check scores.
+# estimator output is saved to .<estimator> file for each sgf.
+# dependencies: see sgf_estimator.
+
+die()   {  echo "$@"; exit 1;  }
+usage() {  die "usage: score_game_collection <ogs|pachi|gnugo>";  }
+dir=`dirname "$0"`/..
+
+[ -n "$1" ] || usage
+est="$1"
+estimator="$dir/estimators/$est/estimator"
+[ -f "$estimator" ] || die "$estimator: not found"
+
+overwrite=""
+if [ "`echo *.$est`" != "*.$est" ]; then
+    echo "Some games have already been scored. "
+    echo -n "Overwrite prev results (y/n) ? ";  read overwrite
+fi
+
+for f in *.sgf ; do
+    echo "$f"
+
+    out=`basename "$f" .sgf`.$est
+    if [ "$overwrite" != "y" ] && [ -f $out ]; then
+	echo "skipping";  continue;
+    fi
+
+    $dir/bin/sgf_estimator $est "$f" | tee "$out" | grep :
+    
+    echo ""
+done

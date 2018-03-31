@@ -1,0 +1,63 @@
+#!/bin/bash
+# sort & filter game collection keeping only scored games.
+
+echo "WARNING: This will delete unscored/unwanted sgfs ! Enter to continue."
+read g
+
+die() {  echo "$@"; exit 1;  }
+
+(
+printf "%i games total\n\n" `ls *.sgf | wc -l`
+
+mkdir 9x9 13x13 19x19 weird
+mv `grep -l 'SZ\[9\]'  *.sgf` 9x9/
+mv `grep -l 'SZ\[13\]' *.sgf` 13x13/
+mv `grep -l 'SZ\[19\]' *.sgf` 19x19/
+mv *.sgf weird/
+
+for dir in 9x9 13x13 19x19; do
+    cd $dir
+    printf "$dir: %i games\n" `ls *.sgf | wc -l`
+
+    # Keep scored games only
+    tmp="scored"
+    mkdir $tmp || die "couldn't create $tmp/"
+    mv `grep -l 'RE\[.\+[0-9]' *.sgf` $tmp/
+    printf "$dir: discarded %i unscored games, %i left.\n" \
+	`ls *.sgf | wc -l`  `ls $tmp | wc -l`
+    rm *.sgf;  mv $tmp/* . ;  rm -rf $tmp/
+
+    # Discard ddk games, gets rid of many "scored" non-final positions.
+         n=`grep -l '[BW]R\[..k\]' *.sgf | wc -l`
+    remove=`grep -l '[BW]R\[..k\]' *.sgf`
+    rm $remove
+    printf "$dir: discarded %i ddk games, %i left.\n" \
+	"$n"  `ls *.sgf | wc -l`
+    
+    # Keep only japanese/chinese rules games 
+    tmp="good"
+    mkdir $tmp || die "couldn't create $tmp/"
+    mv `grep -li 'RU\[\(chinese\|japanese\)\]' *.sgf` $tmp/
+    printf "$dir: discarded %i non japanese/chinese rules games, %i left.\n" \
+	`ls *.sgf | wc -l`  `ls $tmp | wc -l`
+    rm *.sgf;  mv $tmp/* . ;  rm -rf $tmp/
+
+    # Discard games without komi info
+    tmp="komi"
+    mkdir $tmp || die "couldn't create $tmp/"
+    mv `grep -l 'KM\[' *.sgf` $tmp/
+    printf "$dir: discarded %i games without komi info, %i left.\n" \
+	`ls *.sgf | wc -l`  `ls $tmp | wc -l`
+    rm *.sgf;  mv $tmp/* . ;  rm -rf $tmp/
+
+    # Discard sgfs with variations
+         n=`grep -l '^))' *.sgf | wc -l`
+    remove=`grep -l '^))' *.sgf`
+    rm $remove
+    printf "$dir: discarded %i sgfs with variations, %i left.\n" \
+	"$n"  `ls *.sgf | wc -l`
+
+    printf "$dir: %i games\n\n" `ls *.sgf | wc -l`
+    cd ..
+done
+) 2>/dev/null

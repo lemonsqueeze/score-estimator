@@ -1,0 +1,28 @@
+#!/bin/sh
+# get and setup ogs / pachi / gnugo estimators
+set -e
+
+die() {  echo "$@"; exit 1;  }
+dir=`dirname "$0"`
+cd "$dir"
+
+if ! [ -d "ogs" ]; then    
+    echo "setting up ogs estimator..."
+    git clone 'https://github.com/online-go/score-estimator' ogs
+    ( cd ogs && make )
+    echo ""
+fi
+
+if ! [ -d "gnugo" ]; then
+    echo "setting up gnugo estimator..."
+    git clone 'https://github.com/lemonsqueeze/score-estimator' gnugo
+    ( cd gnugo && git checkout gnugo && make )
+    echo ""
+fi
+
+if ! [ -d "pachi" ]; then
+    echo "setting up pachi estimator..."
+    git clone 'https://github.com/lemonsqueeze/pachi' pachi
+    ( cd pachi && git checkout ogs_estimator && make -j4 )
+    echo ""
+fi

@@ -1,2 +1,11 @@
 *~
 *.o
+*.info
+*.ogs
+*.pachi
+*.gnugo
+*.raw
+estimators/pachi
+estimators/ogs
+estimators/gnugo
+src/score_game

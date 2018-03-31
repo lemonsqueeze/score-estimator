@@ -1,0 +1,37 @@
+#!/bin/sh
+# create .info file for each sgf with basic sgf infos:
+# rules, handicap, sgf result and numerical result
+
+game_info()
+{
+    sgf="$1"
+    out="`basename $sgf .sgf`.info"
+
+    rules=`perl -ne <"$sgf" '/RU\[([^]]*)\]/ && print lc($1) . "\n";'`
+    
+    handicap=""
+    handicap_str="even"
+    if grep -q 'HA\[' "$sgf"; then
+	handicap=`grep HA "$sgf" | sed -e 's/.*HA\[\([0-9]\)\].*/\1/'`
+	handicap_str="H$handicap"
+    fi
+
+    (    
+	echo "$rules rules, $handicap_str"
+	
+	result=`grep 'RE\[' "$sgf" | sed -e 's/.*RE\[\([^]]*\)\].*/\1/'`
+	echo "sgf result: $result"
+
+	result=`echo "$result" | sed -e 's/B+//' -e 's/W+/-/'`
+	echo "num result: $result"
+
+    ) | tee "$out"
+}
+
+
+for f in *.sgf; do
+    echo "$f:"
+    game_info "$f"
+    echo ""
+done
+
