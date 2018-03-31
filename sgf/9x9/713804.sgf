@@ -1,0 +1,81 @@
+(;FF[4]
+GM[1]
+DT[2014-07-11]
+PC[OGS: http://online-go.com/game/713804]
+PB[Mr Newby]
+PW[pollemand]
+BR[6k]
+WR[3d]
+CP[online-go.com]
+RE[B+9.5]
+SZ[9]
+KM[-5.5]
+RU[japanese]
+C[Mr Newby: Hi there pollemand
+]
+C[pollemand: Hi
+]
+;B[ff]
+;W[cf]
+;B[fd]
+;W[fc]
+;B[ec]
+;W[gc]
+;B[gd]
+;W[eb]
+;B[db]
+;W[dc]
+;B[ed]
+;W[cb]
+;B[fb]
+;W[da]
+;B[gb]
+;W[dg]
+;B[eg]
+;W[hc]
+;B[hb]
+;W[dh]
+;B[eh]
+;W[ei]
+;B[fi]
+;W[di]
+;B[gh]
+;W[de]
+;B[ef]
+;W[dd]
+;B[fa]
+;W[ea]
+;B[df]
+;W[cg]
+;B[ee]
+;W[]
+C[Mr Newby: Hmmm
+]
+C[Mr Newby: Well thanks for the #1 spot, completely undeserved.  I think I have a moral obligation to give it back to you.
+]
+C[pollemand: w +1.5
+]
+C[pathogenix: ...
+]
+C[pathogenix: Oh... negative komi
+]
+C[crodgers: yeah...
+]
+C[crodgers: is that correct?
+]
+C[crodgers: if negative komi is correct, then the score is correct
+]
+C[pathogenix: yeah, if the game was intended to be even, then it's wrong.
+]
+C[crodgers: but ladder games are even, right?
+]
+C[pathogenix: But the score is correct with negative komi
+]
+C[crodgers: yeah, but i think komi should be 6.5
+]
+C[pathogenix: I think it's supposed to be 5.5 I wonder if it got broken when anoek was fixing the auto-handicap stuff
+]
+C[ST000MA: Does it mean that handicap on 9x9 is now only changing komi?
+]
+;B[]
+)

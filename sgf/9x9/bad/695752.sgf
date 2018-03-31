@@ -1,0 +1,768 @@
+(;FF[4]
+GM[1]
+DT[2014-06-27]
+PC[OGS: http://online-go.com/game/review/25282]
+PB[scialen]
+PW[LinuxGooo]
+CP[online-go.com]
+RE[W+86.5]
+SZ[9]
+KM[5.5]
+RU[japanese]
+;B[gc]
+(;W[cg]
+;B[gg]
+;W[cc]C[
+
+-- chat --
+LinuxGooo: it could have been an interesting move for black to attack quickly into whites area
+LinuxGooo: but lets have a look what you could have played
+LinuxGooo: black even could have attacked side
+LinuxGooo: 9x9 is gambling around with variations.... its just a training tool for playing the big board :-)
+scialen: at say... B5?
+
+]
+
+(;B[ge]
+;W[fd]C[
+
+-- chat --
+scialen: I got intimidated by that
+LinuxGooo: you have an idea why white  didd F6
+scialen: to invade?
+LinuxGooo: white is behind, as black has first move... which is round about 10 points behind... so on such a small board like 9x9 it needs a quick and very aggressive playing of white to compensate this difference
+LinuxGooo: one stone is round about 10 points value, is said in GO
+scialen: D:
+scialen: so you had to try and cut me down quick?
+LinuxGooo: so you always should do a move, which gives you the chance for 10 points
+scialen: and what made your move a good move?
+LinuxGooo: yes, its just 81 coordinates and not 381 which gives more time, so the fuseki opening for white here is very short
+LinuxGooo: I pushed you into gote, and kept sente to control centre
+scialen: hmm... that makes a lot of sense - it is like a move played on many levels
+scialen: not just for territory, not just attack, but psychology as well
+LinuxGooo: yes, this move has multifunctions, as it even can cover the top side
+scialen: okay
+LinuxGooo: as Go is a "tradiing, you could have said, OK, I give up one corner, maybe
+
+]
+
+(;B[gd]
+;W[fc]
+;B[ec]
+;W[fb]
+;B[gb]
+;W[fe]
+;B[ff]
+;W[ef]
+;B[eb]
+;W[ed]
+;B[fa]
+;W[fg]
+;B[fh]
+;W[gf]
+;B[eg]
+;W[ff]
+;B[hf]
+;W[gh]
+;B[dd]
+;W[dc]
+;B[df]
+;W[hg]
+;B[ig]
+;W[he]
+;B[de]
+;W[eh]
+;B[ee]
+;W[dg]
+;B[cd]
+;W[bd]
+;B[bc]
+;W[ce]
+;B[be]
+;W[cf]
+;B[ad]
+;W[db]
+;B[cd]
+;W[dd]
+;B[ea]
+;W[da]
+;B[ga]
+;W[hd]
+;B[]
+;W[]C[
+
+-- chat --
+LinuxGooo: short one 
+scialen: yup
+
+]
+
+)(;B[fe]
+;W[gd]
+(;B[ed]
+;W[fc]
+;B[ec]
+;W[fb]C[
+
+-- chat --
+scialen: looking at it, would a better black move have been E6 to start with on that?
+
+]
+
+;B[hd]
+;W[hc]
+;B[ic]
+;W[gb]C[
+
+-- chat --
+scialen: before you made your variation, I mean :D
+
+]
+
+;B[eb]
+;W[he]
+;B[hf]
+;W[id]C[
+
+-- chat --
+LinuxGooo: even if black plays very aggressive, it can survive in corner of black
+scialen: ok
+
+]
+
+)(;B[hd]
+;W[fc]
+;B[gb]
+;W[fb]
+;B[ed]C[
+
+-- chat --
+scialen: I think I'm going to have to buy a journal to write these lessons in
+
+]
+
+;W[dc]
+;B[ec]
+;W[eb]
+;B[dd]
+;W[cd]
+;B[df]
+;W[de]
+;B[ee]
+;W[cf]
+;B[ce]
+;W[be]
+;B[de]
+;W[dg]
+;B[eg]
+;W[eh]
+;B[fh]
+;W[dh]
+;B[ei]
+;W[di]
+;B[fi]
+;W[da]
+;B[fa]
+;W[ea]
+;B[ga]
+(;W[hc]
+;B[hb]
+;W[ic]
+;B[id]
+)(;W[bh]
+)(;W[bc]
+;B[ic]C[
+
+-- chat --
+LinuxGooo: something like this maybe
+LinuxGooo: you can download these SGFS, and combine different SGFs into one SGF
+LinuxGooo: just using a SGFF reader/editor like MultiGo 4.0
+scialen: hmmmm
+LinuxGooo: by time your mind will become more flexible to get ideas what might be played
+LinuxGooo: a beginner has no ideas, what all is possible with these simple stones and simple rules
+scialen: yeah
+LinuxGooo: sometimes its just mind blowing
+scialen: and every move you make challenges me
+scialen: like I go blank and go 'what do I do here?'
+LinuxGooo: and I am only a beginner, playing 5 months GO... I dint play 20,000 games like Dans have done
+scialen: that many?!
+LinuxGooo: yes
+
+]
+
+;W[hi]
+))))(;B[de]C[
+
+-- chat --
+scialen: even from there?
+LinuxGooo: risky, but possible
+
+]
+
+(;W[ce]
+;B[dd]
+;W[cd]
+;B[df]
+;W[cf]
+;B[dc]
+;W[db]
+;B[eb]
+;W[cb]
+;B[dg]
+;W[dh]
+;B[eh]
+;W[ch]
+;B[ee]C[
+
+-- chat --
+scialen: which woudl give the centre
+scialen: would*
+LinuxGooo: but very risky, as white could come fromback
+
+]
+
+)(;W[fe]C[
+
+-- chat --
+scialen: from that move,
+scialen: my instinct would be to press on with black
+LinuxGooo: this becomes a slaughtering, where its not clear who will win or die
+
+]
+
+;B[ec]
+;W[ed]
+;B[dd]
+;W[dc]
+;B[ee]
+;W[fd]
+;B[fc]
+;W[ef]
+;B[df]
+;W[eg]
+;B[ff]
+;W[fg]
+;B[gf]
+;W[dg]
+;B[ge]
+;W[cf]
+;B[gd]C[
+
+-- chat --
+scialen: the way I'm also reading these moves, it is RARE - almost a last resort, to place stones back near your starting side
+
+]
+
+;W[ce]
+;B[db]
+;W[cb]
+;B[eb]
+;W[cd]
+;B[fh]
+;W[eh]
+;B[gh]
+;W[da]
+;B[ea]
+;W[ca]
+;B[ei]
+;W[di]
+;B[fi]
+;W[ch]
+))(;B[dh]C[
+
+-- chat --
+LinuxGooo: D2
+scialen: ohhhh yes sorry - it was at a diagonal
+scialen: what makes that preferable to attaching?
+
+]
+
+;W[ch]
+;B[dg]C[
+
+-- chat --
+LinuxGooo: D2 is a direct attack which pushes white back
+
+]
+
+;W[df]
+;B[ef]
+;W[de]
+;B[db]
+;W[cb]
+;B[dc]
+;W[dd]
+;B[ed]
+;W[ee]
+;B[fe]
+;W[eg]
+;B[eh]
+;W[ff]
+;B[fg]
+;W[ef]
+;B[gf]
+;W[fd]C[
+
+-- chat --
+scialen: hmm.. and before you said not to attach single stone with single stone - in 9x9 it's okay to do so?
+
+]
+
+;B[ge]
+;W[ec]
+;B[eb]
+;W[fc]
+;B[fb]
+;W[gd]
+;B[hd]
+;W[ed]
+;B[hb]C[
+
+-- chat --
+LinuxGooo: but as you see, not the bad way to win
+LinuxGooo: no, it waas not attaching, it was a so called sholder move
+
+]
+
+))(;AB[cc]C[
+
+-- chat --
+LinuxGooo: :-)lets say we have such a situation on a ig board, dont see laack as corner stones now, just at side
+LinuxGooo: black*
+
+]
+
+(;AW[cd]C[
+
+-- chat --
+scialen: okay
+LinuxGooo: C6 is wrong, clear... dont touch a single stone
+LinuxGooo: same G6
+scialen: I remember that from when you told me, yes :D
+
+]
+
+;AW[gd]C[
+
+-- chat --
+scialen: :)
+
+]
+
+;AB[fd]
+(;AB[ge]
+;AB[fe]
+)(;W[ge]
+;B[fe]C[
+
+-- chat --
+LinuxGooo: makes black stronger
+
+]
+
+))(;W[fd]C[
+
+-- chat --
+LinuxGooo: now the sholder move.... its different effect
+scialen: and if black attaches at F7, you can make white create a wall?
+LinuxGooo: black is in trouble, must decide which side is more important, white forces black to make a decision
+LinuxGooo: here the 2nd option 
+
+]
+
+(;B[gd]
+;W[fc]C[
+
+-- chat --
+LinuxGooo: it can be good for an invastion
+
+]
+
+;B[fb]
+;W[eb]
+;B[gb]
+;W[dc]C[
+
+-- chat --
+scialen: whoa
+
+]
+
+;B[cb]C[
+
+-- chat --
+scialen: like a river forcing a river bank to guide it
+LinuxGooo: yeah 
+LinuxGooo: but only one optoin
+
+]
+
+;W[dd]
+;B[db]
+;W[da]
+;B[ca]
+;W[ea]
+;B[fa]
+;W[ec]
+;B[cd]
+;W[df]
+;B[ce]
+;W[de]
+;B[fe]
+;W[ff]
+;B[gf]
+;W[ee]
+;B[ge]
+;W[cf]
+;B[bf]
+;W[bg]
+;B[be]
+;W[bh]C[
+
+-- chat --
+LinuxGooo: yeah, GO stones are magic... 
+LinuxGooo: :-)
+LinuxGooo: always impressive the effect they can evoke
+scialen: going from moves 3-4-5 there, it's like you're just pushing through
+
+]
+
+)(;B[fc]
+;W[gd]
+;B[ed]C[
+
+-- chat --
+scialen: to... make black waste stones, essentially?
+LinuxGooo: shure, black must protect
+
+]
+
+;W[hc]
+(;B[hb]
+;W[hd]
+;B[ec]
+;W[ib]
+;B[gb]
+;W[ff]C[
+
+-- chat --
+LinuxGooo: look how you pushed from No. 1 into the corner and white got control over centre now
+
+]
+
+;B[ee]
+;W[fe]
+;B[ef]
+;W[eg]
+;B[dg]
+;W[eh]
+;B[dh]C[
+
+-- chat --
+scialen: ohh it wasn't black pushing white into a corner?
+LinuxGooo: no, white wanted to come to there :-)
+
+]
+
+)(;B[fe]
+;W[gb]
+;B[ge]
+;W[hd]
+(;B[fb]
+;W[hb]
+;B[he]
+;W[fa]
+;B[ea]
+;W[ga]
+;B[id]
+;W[ic]
+;B[ie]
+;W[ia]
+;B[eb]C[
+
+-- chat --
+LinuxGooo: the best way to keep white under control
+scialen: well I'm starting to see one of my mistakes - I play too close
+LinuxGooo: let me look 
+scialen: I mean in general :D
+LinuxGooo: Ｉｈａｖｅ　ｄｅｍｏ　ｂｏａｒｄ　ｆｏｒ　ｓｈａｐｅ
+LinuxGooo: just must search, I have setup a demo board with shapes. Just don tfind it... one moment *laugh*
+scialen: hehe
+scialen: no worries :) and thank you for going through this
+LinuxGooo: ｈｅｒｅ
+LinuxGooo: http://online-go.com/demo/25284
+
+]
+
+)(;B[he]C[
+
+-- chat --
+LinuxGooo: shares are the basics for moves
+LinuxGooo: shapes*
+scialen: I'm afraid of making those moves
+scialen: because I keep thinking 'he'll cut me'
+LinuxGooo: think about, that your opponent has same problems as you too
+LinuxGooo: your opponent same fears, that you damage him
+
+]
+
+(;W[fb]
+;B[ec]C[
+
+-- chat --
+LinuxGooo: its all thinking in shapes
+scialen: 11-12-13 is another example, this time with black
+
+]
+
+;W[eb]
+;B[db]C[
+
+-- chat --
+scialen: yeah - the way I'm looking at it is it makes black retreat and lose territory
+
+]
+
+;W[ie]
+;B[if]
+(;W[id]
+;B[hb]
+)(;W[hb]
+;B[id]
+;W[ic]
+;B[ie]C[
+
+-- chat --
+LinuxGooo: here 
+LinuxGooo: ???S
+
+]
+
+;W[da]C[
+
+-- chat --
+scialen: yeah if you come back to move 21
+scialen: and you bring white UP and THEN you make white connect to each other
+
+]
+
+;B[ca]
+;W[ea]C[
+
+-- chat --
+LinuxGooo: yes, white steals the corner :-)
+LinuxGooo: all via No. 1
+scialen: and when enough has been done, you can then put a stone near the centre
+scialen: that's one example - I've noticed you do it elsewhere also
+
+]
+
+;B[bb]
+;W[ee]
+(;B[ef]
+;W[de]
+;B[dd]
+;W[cd]
+;B[dc]
+;W[bc]
+;B[cb]
+;W[be]
+;B[ac]
+;W[bd]
+;B[ad]
+;W[ae]
+;B[ab]
+;W[df]
+;B[eg]
+;W[ba]
+;B[aa]
+;W[ba]
+)(;B[de]
+;W[ef]
+(;B[df]
+;W[fg]
+;B[eg]
+;W[ff]
+;B[eh]
+;W[hg]
+;B[gg]
+;W[gh]
+;B[gf]
+;W[fh]
+;B[hh]
+;W[ig]
+;B[ih]
+;W[hf]C[
+
+-- chat --
+scialen: D:
+
+]
+
+)(;B[ff]
+;W[df]
+;B[ce]
+;W[cf]
+;B[eg]
+;W[dg]C[
+
+-- chat --
+scialen: hmm I think it is in an earlier variation
+
+]
+
+;B[eh]
+;W[dh]
+;B[di]
+;W[ci]
+;B[ei]
+;W[bh]
+;B[bf]
+;W[bg]
+;B[be]
+;W[af]
+;B[ae]
+;W[ag]
+;B[cg]
+;W[ch]C[
+
+-- chat --
+scialen: all from 1
+LinuxGooo: the lowest win for white, less this in bottom left corner
+LinuxGooo: yes, thats why Dan pre-tthink up to 20 moves
+scialen: okay
+scialen: and there's no easy way to learn it is there - yuou just have to play the games
+LinuxGooo: a stone can has tremendous effect 10,20 or 40 moves later
+LinuxGooo: not only games, you have to do lots of exercises on the board... more time you spend with analysing game and moves
+LinuxGooo: because only learning by loosing game is very boring
+scialen: and how do you analyse games for yourself? Like we're doing here?
+LinuxGooo: yes, excatly... again and again you go through all variations for No. 1 to understand what is possible, and try to remember it for games later :-)
+scialen: as I'm starting out, is it bad to get others to go through variations with me?
+scialen: because I wouldn't know what to think on these
+LinuxGooo: thats why its a normal way, that you play a game, then you see... someething went wrong, and ask for higher players tto do short reviews... not the whole game, but sequences to understna what you might have done betterin that situatoin...
+LinuxGooo: experienced players of 1D-3kyu or so know the answers quickly
+scialen: *nods*
+LinuxGooo: youi see the problem here still existing ?
+scialen: and basically, every pointer of "do this instead" is another lesson
+scialen: white can cut?
+LinuxGooo: yes
+
+]
+
+;B[dd]C[
+
+-- chat --
+scialen: I've noticed you place stones one space over THEN attach
+
+]
+
+;W[fg]
+;B[fh]
+;W[gg]
+;B[gh]
+(;W[hh]
+)(;W[hg]
+;B[hh]
+;W[ig]
+;B[hf]
+;W[gf]C[
+
+-- chat --
+LinuxGooo: show
+
+]
+
+)))))(;AB[hb]C[
+
+-- chat --
+LinuxGooo: does this attack make sense ?
+scialen: no
+
+]
+
+)(;AB[id]C[
+
+-- chat --
+LinuxGooo: here ?
+scialen: no
+
+]
+
+)(;AB[ga]C[
+
+-- chat --
+scialen: \[note for self later: these are on the many-11's\]
+LinuxGooo: black no where can get benefit from to attack white
+scialen: and that doesn't make sense either
+scialen: *nods*
+LinuxGooo: yep
+
+]
+
+)(;AB[eb]C[
+
+-- chat --
+scialen: hmm.. or would it be that black could get stronger regardless?
+
+]
+
+;W[fb]
+;B[ec]C[
+
+-- chat --
+LinuxGooo: black with E8 secured it
+
+]
+
+;W[hb]
+;B[fa]
+;W[ga]
+;B[ea]
+;W[ie]
+;B[if]
+;W[id]
+;B[hg]C[
+
+-- chat --
+LinuxGooo: is white safe ?
+
+]
+
+;W[cg]C[
+
+-- chat --
+LinuxGooo: can white play now away to get corner c3 ?
+scialen: it doesn't... feel it
+
+]
+
+;B[ib]C[
+
+-- chat --
+LinuxGooo: white is dead now
+LinuxGooo: why ?
+scialen: there are no opportunities for 2 eyes
+
+]
+
+(;W[ia]
+;B[ha]
+)(;W[eg]C[
+
+-- chat --
+LinuxGooo: to learn such moves, its best to do tsumego
+scialen: *nods*
+LinuxGooo: a beginer has no idea, what is possible with attacking groups which seem safe
+scialen: yeah
+scialen: but... earlier on at move 11/12 there, why wouldn't white take those two stones?
+
+]
+
+;B[ia]
+;W[be]
+;B[cf]
+;W[bf]
+;B[ce]
+;W[ha]
+;B[ic]
+))))))))
