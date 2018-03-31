@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <getopt.h>
+#include <math.h>
 
 void usage()
 {
@@ -59,6 +60,7 @@ void die(const char *format, ...)
 enum go_ruleset {
         RULES_CHINESE, /* default */
         RULES_JAPANESE,
+        RULES_AGA,
 };
 
 const char*
@@ -88,10 +90,14 @@ float komi = 0.5;
 int handicap = 0;
 int captures[4] = { 0, };
 
-
 #define S_NONE  0
 #define S_BLACK 1
 #define S_WHITE 2
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b));
+
+#define board_large()  (boardsize >= 15)
+#define board_small()  (boardsize <= 9)
 
 int other_color(int color)
 {
@@ -204,19 +210,18 @@ void read_estimator_output(FILE *f, int ownermap[19 * 19])
 	read_board(f, ownermap);
 }
 
-int dead_stones[19 * 19] = { 0, };
-int ndead_stones = 0;
-
-void find_dead_stones(int ownermap[19 * 19])
+/* Find dead and unclear stones. */
+void find_dead_unclear_stones(int ownermap[19 * 19],
+			      int dead[], int *ndead,
+			      int unclear[], int *nunclear)
 {
 	for (int c = 0; c < boardsize2; c++) {
 		if (board[c] != S_BLACK &&
 		    board[c] != S_WHITE)  continue;
-		if (ownermap[c] != other_color(board[c]))  continue;
-		dead_stones[ndead_stones++] = c;
+		if (ownermap[c] == S_NONE)                  unclear[(*nunclear)++] = c;
+		if (ownermap[c] == other_color(board[c]))   dead[(*ndead)++] = c;
 	}
 }
-
 
 /* Owner map: 0: undecided; 1: black; 2: white; 3: dame */
 
@@ -268,14 +273,14 @@ board_tromp_taylor_iter(int *ownermap)
 	return needs_update;
 }
 
-int
-board_score_handicap_compensation()
+int board_score_handicap_compensation()
 {
         switch (rules) {             
                 /* Usually this makes territory and area scoring the same.
                  * See handicap go section of:
                  * https://senseis.xmp.net/?TerritoryScoringVersusAreaScoring */
-		case RULES_JAPANESE:  return (handicap ? handicap - 1 : 0);
+		case RULES_JAPANESE:
+		case RULES_AGA:       return (handicap ? handicap - 1 : 0);
 		
                 /* RULES_CHINESE etc */
 		default:              return  handicap;
@@ -284,9 +289,33 @@ board_score_handicap_compensation()
         assert(0);  /* not reached */
 }
 
-/* Tromp-Taylor Counting */
-float
-board_official_score_and_dame(int *dame)
+/* Compute score estimate from mc ownermap */
+float board_ownermap_score_est(int *ownermap, int *unclear_stones, int *unclear_empty)
+{
+	float scores[4] = {0.0, };  /* Number of points owned by each color */
+        if (unclear_stones)  *unclear_stones = 0;
+
+	for (int c = 0; c < boardsize2; c++) {
+		int color = ownermap[c];
+		
+		/* If status is unclear and there's a stone there assume it's alive. */
+		if (color == S_NONE && (board[c] == S_BLACK || board[c] == S_WHITE)) {
+			color = board[c];  (*unclear_stones)++;
+		}
+		
+                scores[color]++;
+        }
+
+	*unclear_empty = scores[S_NONE];
+
+        int handi_comp = board_score_handicap_compensation();
+        return ((scores[S_WHITE] + komi + handi_comp) - scores[S_BLACK]);
+}
+
+/* Official score after removing dead groups and Tromp-Taylor counting.
+ * Number of dames is saved in @dame, final ownermap in @ownermap. */
+float board_official_score_details(int *dead, int ndead,
+				   int *dame, int *ownermap)
 {
 	/* A point P, not colored C, is said to reach C, if there is a path of
 	 * (vertically or horizontally) adjacent points of P's color from P to
@@ -294,8 +323,7 @@ board_official_score_and_dame(int *dame)
 	 *
 	 * A player's score is the number of points of her color, plus the
 	 * number of empty points that reach only her color. */
-
-	int ownermap[19 * 19];
+	
 	int stones[4]    = { 0, };
         int prisoners[4] = { 0, captures[S_BLACK], captures[S_WHITE], 0 };
 	const int o[4] = {0, 1, 2, 0};
@@ -305,9 +333,8 @@ board_official_score_and_dame(int *dame)
 	}
 
 	/* Process dead stones. */
-	for (int i = 0; i < ndead_stones; i++) {
-		//foreach_in_group(board, dead_stones[i]) {
-		int c = dead_stones[i];
+	for (int i = 0; i < ndead; i++) {
+		int c = dead[i];
 		int color = board[c];
 		ownermap[c] = o[other_color(color)];
 		stones[color]--; prisoners[other_color(color)]++;
@@ -319,8 +346,6 @@ board_official_score_and_dame(int *dame)
 
 	while (board_tromp_taylor_iter(ownermap))
 		/* Flood-fill... */;
-
-	print_board(ownermap);
 
 	int scores[4] = { 0, };
 	*dame = 0;
@@ -339,6 +364,42 @@ board_official_score_and_dame(int *dame)
 	int handi_comp = board_score_handicap_compensation(board);
 	return komi + handi_comp + scores[S_WHITE] - scores[S_BLACK];
 }
+
+/* Check position is final and safe to score:
+ * No unclear groups and official chinese score and score est agree. */
+static bool
+game_safe_to_score(float score_est, 
+		   int dead[], int ndead, int unclear[], int nunclear,
+		   char **msg)
+{
+	/* Get chinese-rules official score. */
+	int dame;
+	int final_ownermap[19 * 19];
+	enum go_ruleset saved_rules = rules;
+	if (rules == RULES_JAPANESE)  rules = RULES_AGA;  /* Can't compare japanese and chinese scores */
+	float  official_score = board_official_score_details(dead, ndead, &dame, final_ownermap);
+	rules = saved_rules;
+	
+	/* Unclear groups ? */
+	*msg = "unclear groups";
+	if (nunclear)  return false;
+	
+	/* Don't go to counting if position is not final.
+	 * If score est and official score disagree position is likely not final.
+	 * If too many dames also. */
+	int max_dames = (board_large() ? 20 : 7);
+	*msg = "too many dames";
+	if (dame > max_dames)         return false;
+
+	/* Can disagree up to dame points, as long as there are not too many.
+	 * For example a 1 point difference with 1 dame is quite usual... */
+	int max_diff = MIN(dame, 4);
+	*msg = "score est and official chinese score don't agree";
+	if (fabs(official_score - score_est) > max_diff)  return false;
+	
+	return true;
+}
+
 
 bool handicap_set = false;
 bool komi_set = false;
@@ -375,18 +436,38 @@ int main(int argc, char **argv)
 	
 	if (argc - optind != 0) {  usage(); exit(1);  }
 
-	int ownermap[19 * 19];  /* ownermap from estimator */
-	read_estimator_output(stdin, ownermap);
+	int mc_ownermap[19 * 19];       /* ownermap from estimator */
+	int dead[19 * 19] = { 0, };     /* dead stones list */
+	int ndead = 0;
+	int unclear[19 * 19] = { 0, };  /* unclear stones list */
+	int nunclear = 0;
+	read_estimator_output(stdin, mc_ownermap);
 	print_board(board);
-	find_dead_stones(ownermap);
+	find_dead_unclear_stones(mc_ownermap, dead, &ndead, unclear, &nunclear);
 
 	int dame = 0;
-	float score = board_official_score_and_dame(&dame);
+	int final_ownermap[19 * 19];
+	float score = board_official_score_details(dead, ndead, &dame, final_ownermap);
+	print_board(final_ownermap);
+
+	int mc_unclear_stones, mc_unclear_empty;
+	float mc_score = board_ownermap_score_est(mc_ownermap, &mc_unclear_stones, &mc_unclear_empty);
+
+        printf("MC score: %.1f\n", -mc_score);
+        printf("MC unclear stone: %i\n", mc_unclear_stones);
+        printf("MC unclear empty: %i\n", mc_unclear_empty);
+
 	printf("Komi: %.1f\n", komi);
 	if (handicap_set)   printf("Handicap: %i\n",   handicap);
 	if (cap_black_set)  printf("Captures B: %i\n", captures[S_BLACK]);
 	if (cap_white_set)  printf("Captures W: %i\n", captures[S_WHITE]);
 	printf("Official score: %.1f (%s)\n", -score, rules2str(rules));
 	printf("Official dames: %i\n", dame);
+
+	char *msg;
+	bool safe_to_score = game_safe_to_score(mc_score, dead, ndead, unclear, nunclear, &msg);
+	if (safe_to_score)  printf("Safe to score: %i\n", safe_to_score);
+	else                printf("Safe to score: %i (%s)\n", safe_to_score, msg);
+
 	printf("Score: %f\n", -score);
 }

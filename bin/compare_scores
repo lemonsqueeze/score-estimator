@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # compare sgf and estimator scores on a game collection:
 #   'game_collection_infos' first to extract sgf scores (.info files)
 #   'score_game_collection <est>' to get estimator scores
@@ -11,6 +11,7 @@ est="$1"
 dir=`dirname "$0"`/..
 [ -f "$dir/estimators/$est/estimator" ] || usage
 
+safe_matches=0
 matches=0
 for f in *.$est; do
     info=`basename $f .$est`.info
@@ -19,14 +20,19 @@ for f in *.$est; do
     #echo "score: $score    sgf_score: $sgf_score"
 
     if [ "$score" = "$sgf_score" ]; then
-        echo "$f ok";  matches=$(( $matches + 1 ))
+        echo "$f ok";  matches=$[$matches + 1]
+	grep -q 'Safe to score: 1' $f  &&  safe_matches=$[$safe_matches + 1]
     else
         echo "$f differs: $score != $sgf_score (sgf)"
     fi
 done
 
 total=`ls *.$est | wc -l`
-differ=$(( $total - $matches))
+safe=`grep -l 'Safe to score: 1' *.$est | wc -l`
+differ=$[$total - $matches]
+safe_differ=$[$safe - $safe_matches]
 
 echo ""
-echo "$total games,  $matches matches,  $differ mismatch"
+pc() {  echo $[ $1 * 100 / $2 ];  }
+printf "$total games:          $matches matches (%i%%),  $differ mismatch \n" `pc $matches $total`
+printf "$safe safe to score:  $safe_matches matches (%i%%),  $safe_differ mismatch \n" `pc $safe_matches $safe`
