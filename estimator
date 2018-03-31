@@ -9,7 +9,11 @@ die() {  echo "$@"; exit 1;  }
 $gnugo -h >/dev/null 2>&1 || die "couldn't find gnugo"
 [ -f $dir/show_ownermap ] || die "show_ownermap missing"
 
+time=`mktemp`
 $dir/tools/ogs_to_board_print "$1" |
 ( $dir/tools/board_print_to_gtp; echo "final_status_list dead" ) |
-$gnugo --chinese-rules --level 10 --mode gtp  |
+/usr/bin/time -o $time -f "Gnugo time: %e s" \
+    $gnugo --chinese-rules --level 10 --mode gtp  |
 $dir/show_ownermap "$1" -
+
+cat $time; rm $time
