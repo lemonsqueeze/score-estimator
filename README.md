@@ -4,10 +4,11 @@
 This uses gnugo to make an ogs [score estimator](https://github.com/online-go/score-estimator)
 for scoring finished games.
 
-One cool thing about this one, there's nothing specific about gnugo actually.
-Any gtp engine which understands `final_status_list dead` command can be used instead
-(some may not like having final_status_list dead called out-of-the-blue though,
-normally this happens after a genmove where the engine passed).
+There's nothing specific about gnugo actually, any gtp engine which understands
+`final_status_list dead` can be plugged in here.
+(some may not like final_status_list being called right away if they expect to have
+passed just before, but this is easy to work around). Once dead stones are known tromp-taylor
+counting is used to get the final ownermap. 
 
 'make' to build.
 
