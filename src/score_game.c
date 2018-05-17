@@ -126,7 +126,7 @@ void print_board(int *board)
 	for (int y = boardsize - 1; y >= 0; y--) {
 		for (int x = 0; x < boardsize; x++) {
 			int c = coord_xy(x, y);
-			const char chr[] = " o_ "; // empty, black, white, offboard
+			const char chr[] = ".XO."; // empty, black, white, dame
 			char ch = chr[board[c]];
 			
 			printf("%c ", ch);
@@ -174,10 +174,10 @@ void read_board(FILE *f, int *board)
 		for (int x = 0; x < boardsize; x++) {
 			int c = y * boardsize + x;
 			switch (line[x * 2]) {
-				case ' ':  board[c] = S_NONE;  break;
-				case 'o':  board[c] = S_BLACK; break;
-				case '_':  board[c] = S_WHITE; break;
-				default:  die("shouldn't happen");
+				case '.':  board[c] = S_NONE;  break;
+				case 'X':  board[c] = S_BLACK; break;
+				case 'O':  board[c] = S_WHITE; break;
+				default:  die("bad stone: '%c'", line[x * 2]);
 			}
 		}
 		y--;
@@ -188,26 +188,23 @@ void read_board(FILE *f, int *board)
 void read_estimator_output(FILE *f, int ownermap[19 * 19])
 {
 	char *line, buf[128];
-	int n = sizeof(buf);
-	while ((line = fgets(buf, n, f))) {
-		
-		if (*line == '#')  continue;
-		if (!strncmp("height: ", line, 8)) {
-			boardsize = atoi(line + 8);
-			assert(boardsize >= 3);
-			assert(boardsize <= 19);
-			boardsize2 = boardsize * boardsize;
-			continue;
-		}
-		if (!strncmp("width: ", line, 7))  continue;
-		if (!strncmp("player_to_move: ", line, 16))  continue;
-		if (boardsize)  break;
-	}
-
-	read_board(f, board);
-	line = fgets(buf, n, f);
-	line = fgets(buf, n, f);
-	read_board(f, ownermap);
+        int n = sizeof(buf);
+        while ((line = fgets(buf, n, f))) {
+                if (*line == '#')  continue;
+                if (!strncmp("boardsize ", line, 10)) {
+                        boardsize = atoi(line + 10);
+                        assert(boardsize >= 0);
+                        assert(boardsize <= 19);
+                        boardsize2 = boardsize * boardsize;
+			
+                        read_board(f, board);
+			
+			line = fgets(buf, n, f);
+			line = fgets(buf, n, f);
+			read_board(f, ownermap);			
+			return;
+                }
+        }
 }
 
 /* Find dead and unclear stones. */

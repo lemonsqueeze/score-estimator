@@ -28,10 +28,10 @@ pdir="$dir/estimators/pachi"
 rules=`perl -ne <"$1" '/RU\[([^]]*)\]/ && print lc($1) . "\n";'`
 
 board=`mktemp`
-ogs=`mktemp`
+in=`mktemp`
 $pdir/tools/sgf2gtp.pl < "$1" |
 $pdir/tools/gtp2board_print   | tee $board |
-$dir/tools/board_print_to_ogs  >$ogs
+$pdir/tools/board_print_to_tunit  >$in
 
 # Find stuff we need to score from board diagram
 komi=` grep "Move:" <$board | sed -e 's/.*Komi: \([0-9.-]\+\).*/\1/'`
@@ -40,6 +40,6 @@ capb=` grep "Move:" <$board | sed -e 's/.*Captures B: \([0-9]\+\).*/\1/'`
 capw=` grep "Move:" <$board | sed -e 's/.* W: \([0-9]\+\).*/\1/'`
 
 raw=`basename "$1" .sgf`.$est.raw        # raw estimator output
-$estimator $ogs     >$raw                # don't use | tee $raw | here ...
+$estimator $in     >$raw                 # don't use | tee $raw | here ...
 $dir/src/score_game -r $rules -k $komi -a $handi -b $capb -w $capw  <$raw
-rm $board $ogs
+rm $board $in
