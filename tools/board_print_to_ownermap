@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+# Just keep ownermap from board_print() output
+# Usage: ./board_print_to_ownermap < board
+
+use utf8;
+binmode STDIN, ":utf8";
+binmode STDOUT, ":utf8";
+
+my $size = 0;
+foreach my $s (<STDIN>) {
+    $s =~ s/^[^|]*\|[^|]*\|//;    # skip regular board, just keep ownermap
+
+    $s =~ s/·/./g;  # color diagrams
+    if ($s =~ m/^ *([0-9]+) [ |]+(([.oOxX,:][ )])+)[ |]+/) {   
+	$s = $2;
+	if ($size == 0)	{  $size = split("", $s) / 2;  }
+	$s =~ s/\)/ /g;    # last move mark
+	$s =~ s/[.,:]/./g;
+	$s =~ s/[Oo]/O/g;
+	$s =~ s/[Xx]/X/g;
+#	$s =~ s/ *$//;
+	print "$s\n";
+    }
+}
+printf "\n\n";

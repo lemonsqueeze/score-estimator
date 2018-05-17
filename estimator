@@ -1,29 +1,30 @@
 #!/bin/sh
-# generic pachi ogs score-estimator
+# generic pachi score-estimator
 set -e
+
+dir=`dirname "$0"`
 
 die() {  echo "$@"; exit 1;  }
 
 # Need Pachi and tools
-pdir=${HOME}/src/pachi
-[ -n "$PACHI_DIR" ] && pdir="$PACHI_DIR"
-[ -d "$pdir" ]       || die "pachi directory not found. Please clone repo in ~/src/pachi or set PACHI_DIR."
+pdir="$dir/pachi"
+[ -d "$pdir" ]       || die "pachi directory not found. clone or symlink repo here first."
 [ -f "$pdir/pachi" ] || die "build pachi first (dcnn not needed)."
 
 dir=`dirname "$0"`
 
 # Save initial ascii board
 board=`mktemp`
-$dir/tools/ogs_to_board_print "$1" >$board
-$dir/tools/board_print_to_ogs_out <$board   # print board and header
+$dir/tools/tunit_to_board_print <"$1" >$board
+cat "$1"; echo ""; echo ""   # print board and header
 
-# Convert to t-unit, pass to pachi, get ownermap and convert to ogs format.
+# Convert to t-unit, pass to pachi and get ownermap
 tunit=`mktemp`
 ( $pdir/tools/board_print_to_tunit  <$board
   echo "moggy status C4 X"    ) |
 perl -ne '!$last && s/X /X\)/ && ($last=1); print;'  >$tunit      # add some last move ...  XXX if no black stone ...
 ( cd $pdir && ./pachi -u $tunit  2>&1 >/dev/null ) |              # just keep stderr
 tac | grep -m 1 -B 30 'Move:' | tac                |              # keep ownermap
-$dir/tools/board_print_to_ogs_out --no-header --ownermap /dev/stdin
+$dir/tools/board_print_to_ownermap
 
 rm $board $tunit
