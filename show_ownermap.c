@@ -10,9 +10,10 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <assert.h>
 
-void die(char *msg)   {  fprintf(stderr, "%s", msg);  exit(1);  }
+void die(char *str, ...)   {  va_list ap; va_start(ap, str); vfprintf(stderr, str, ap); va_end(ap); exit(1);  }
 void fail(char *msg)  {  perror(msg);  exit(1);  }
 void usage()          {  fprintf(stderr, "usage: show_ownermap file.game dead_stones\n");  exit(1);  }
 
@@ -51,7 +52,7 @@ void print_board(int *board)
 	for (int y = boardsize - 1; y >= 0; y--) {
 		for (int x = 0; x < boardsize; x++) {
 			int c = coord_xy(x, y);
-			const char chr[] = " o_ "; // empty, black, white, offboard
+			const char chr[] = ".XO."; // empty, black, white, dame
 			char ch = chr[board[c]];
 			
 			printf("%c ", ch);
@@ -82,42 +83,47 @@ void print_board(int *board)
 	} \
 } while(0)
 
+void parse_board(FILE *f)
+{
+	for (int y = boardsize - 1; y >= 0; y--) {
+		char line[256];
+                if (!fgets(line, sizeof(line), f))  die("Premature EOF.\n");
+
+		if (!strncmp("komi ", line, 5))     {  y++; continue;  }
+		if (!strncmp("handicap ", line, 9)) {  y++; continue;  }
+
+		if (strlen(line) != boardsize * 2 &&
+		    strlen(line) != boardsize * 2 - 1)  die("Line not %d char long: '%s'\n", boardsize * 2 - 1, line);
+		
+                for (unsigned int i = 0; i < boardsize * 2; i++) {
+			int c = y * boardsize + i/2;
+                        switch (line[i]) {
+				case '.': board[c] = S_NONE;  break;
+				case 'X': board[c] = S_BLACK; break;
+				case 'O': board[c] = S_WHITE; break;
+				default : die("Invalid stone '%c'\n", line[i]);
+                        }
+                        i++;
+                        if (line[i] && line[i] != ' ' && line[i] != '\n' && line[i] != ')')
+                                die("No space after stone %i: '%c'\n", i/2 + 1, line[i]);		       
+		}
+	}
+}
 
 void read_game_file(FILE *f)
 {
 	char *line, buf[128];
 	int n = sizeof(buf);
-	int y = -1;
 	while ((line = fgets(buf, n, f))) {
-		
 		if (*line == '#')  continue;
-		if (!strncmp("height ", line, 7)) {
-			boardsize = atoi(line + 7);
+		if (!strncmp("boardsize ", line, 10)) {
+			boardsize = atoi(line + 10);
 			assert(boardsize >= 0);
 			assert(boardsize <= 19);
 			boardsize2 = boardsize * boardsize;
-			y = boardsize - 1;
-			continue;
+			parse_board(f);
 		}
-		if (!strncmp("width ", line, 6))  continue;
-		if (!strncmp("player_to_move ", line, 15))  continue;
-
-		int len = strlen(line);
-		assert(len == boardsize * 3);
-
-		assert(y >= 0);
-		for (int x = 0; x < boardsize; x++) {
-			int c = y * boardsize + x;
-			switch (atoi(line + x * 3)) {
-				case  1:  board[c] = S_BLACK; break;
-				case -1:  board[c] = S_WHITE; break;
-				case  0:  board[c] = S_NONE;  break;
-				default:  die("shouldn't happen");
-			}
-		}
-		y--;
 	}
-	assert(y == -1);
 }
 
 int dead_stones[19 * 19] = { 0, };
@@ -254,9 +260,7 @@ int main(int argc, char **argv)
 	if (!f)  fail(gamefile);
 	read_game_file(f);
 	
-	printf("height: %i\n", boardsize);
-	printf("width: %i\n", boardsize);
-	printf("player to move: %i\n", 1);
+	printf("boardsize %i\n", boardsize);
 	print_board(board);
 
 	char *deadstonesfile = *argv;

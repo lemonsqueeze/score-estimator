@@ -1,5 +1,5 @@
 #!/bin/bash
-# turn a gtp engine into an ogs score estimator (only for scoring finished games)
+# turn a gtp engine into a score estimator (only for scoring finished games)
 # usage: estimator file.game
 
 engine="/usr/games/gnugo"
@@ -17,7 +17,7 @@ err=`mktemp`
 
 run_engine()
 {
-    $dir/tools/ogs_to_board_print "$file" |
+    $dir/tools/tunit_to_board_print < "$file" |
 	( $dir/tools/board_print_to_gtp; echo "final_status_list dead" ) |
 	/usr/bin/time -o $time -f "Engine time: %e s" \
 		      $engine $options  >$out 2>$err

@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+my $size = 0;
+my $y = 0;
+foreach my $s (<STDIN>) {
+    if ($s =~ m/^boardsize ([0-9]+)/) {  $size = $1;  next;  }
+
+    if ($s =~ m/^([.OX )]+)/)  {
+	if ($y == 0) {  $y = $size;  }
+	printf(" %2i | %s | \n", $y--, $1);
+    }
+}
