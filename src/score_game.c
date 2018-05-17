@@ -166,9 +166,9 @@ void read_board(FILE *f, int *board)
 	int y = boardsize - 1;
 	while (y >= 0) {
 		line = fgets(buf, n, f);
-		int len = strlen(line);
-		if (len != boardsize * 2 + 1)
-			die("board line %i is not %i char long:\n%s\n", boardsize - y, boardsize * 2 + 1, line);
+		if (strlen(line) != boardsize * 2 &&
+		    strlen(line) != boardsize * 2 + 1)
+			die("board line %i is not %i char long:\n%s\n", boardsize - y, boardsize * 2, line);
 
 		assert(y >= 0);
 		for (int x = 0; x < boardsize; x++) {

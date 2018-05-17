@@ -8,21 +8,32 @@ cd "$dir"
 
 if ! [ -d "ogs" ]; then    
     echo "setting up ogs estimator..."
-    git clone 'https://github.com/online-go/score-estimator' ogs
-    ( cd ogs && make )
+    git clone 'https://github.com/lemonsqueeze/score-estimator' ogs
+    ( cd ogs  &&  git checkout ogs  &&  make )
     echo ""
 fi
 
 if ! [ -d "gnugo" ]; then
     echo "setting up gnugo estimator..."
     git clone 'https://github.com/lemonsqueeze/score-estimator' gnugo
-    ( cd gnugo && git checkout gnugo && make )
+    ( cd gnugo  &&  git checkout gnugo  &&  make )
     echo ""
 fi
 
 if ! [ -d "pachi" ]; then
     echo "setting up pachi estimator..."
-    git clone 'https://github.com/lemonsqueeze/pachi' pachi
-    ( cd pachi && git checkout ogs_estimator && make -j4 )
+    git clone 'https://github.com/lemonsqueeze/score-estimator' pachi
+    ( cd pachi  &&  git checkout pachi  &&  ln -s ../../src/pachi .   )
     echo ""
 fi
+
+
+# Get & compile Pachi
+( cd ../src
+if ! [ -d "pachi" ]; then
+    echo "setting up pachi ..."
+    git clone 'https://github.com/lemonsqueeze/pachi' pachi
+    ( cd pachi  &&  git checkout my  &&  make -j4 DCNN=0  )
+    echo ""
+fi
+)
