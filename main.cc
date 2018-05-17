@@ -6,9 +6,18 @@
 #include <ctime>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include "estimator.h"
 
 using namespace score_estimator;
+
+void die(const char *str, ...) {
+	va_list ap;
+	va_start(ap, str);
+	vfprintf(stderr, str, ap);
+	va_end(ap);
+	exit(1);
+}
 
 void scan1(FILE *fp, const char *fmt, void *param) {
     if (fscanf(fp, fmt, param) != 1) {
@@ -34,28 +43,30 @@ int main(int argn, const char *args[]) {
             return -1;
         }
 
-        char buf[256];
-        if (!fgets(buf, sizeof(buf), fp) || buf[0] != '#') {
-            fprintf(stderr, "Invalid game file\n");
-            return -1;
-        }
-
         int player_to_move;
         Goban goban;
-        scan1(fp, "height %d\n", &goban.height);
-        scan1(fp, "width %d\n", &goban.width);
-        scan1(fp, "player_to_move %d\n", &player_to_move);
+	scan1(fp, "boardsize %d\n", &goban.height);
+	goban.width = goban.height;
 
+	int stone2int[256];
+	for (int i = 0; i < 256; i++)  stone2int[i] = -2;
+	stone2int['X'] = 1;
+	stone2int['O'] = -1;
+	stone2int['.'] = 0;
         for (int y=0; y < goban.height; ++y) {
+	    char buf[256];
+	    char *line = fgets(buf, sizeof(buf), fp);
+	    if (!line)  die("Invalid board\n");
+	    if ((int)strlen(line) != goban.width * 2)
+		    die("Board line %i not %i characters long\n", y+1, goban.width * 2);
             for (int x=0; x < goban.width; ++x) {
-                scan1(fp, "%d", &(goban.board[y][x]));
+		    unsigned char c = line[x * 2];
+		    if (stone2int[c] == -2)  die("Line %i: invalid stone '%c'\n", y+1, c);
+		    goban.board[y][x] = stone2int[c];
             }
         }
 
-        printf("%s\n", args[arg]);
-        printf("height: %d\n", goban.height);
-        printf("width: %d\n", goban.width);
-        printf("player to move: %d\n", player_to_move);
+	printf("boardsize %i\n", goban.width);
         goban.print();
         printf("\n\n");
         start = clock();

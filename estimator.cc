@@ -475,7 +475,7 @@ void Goban::clearBoard() {
 void Goban::print() {
     for (int y=0; y < height; ++y) {
         for (int x=0; x < width; ++x) {
-            printf("%c ", board[y][x] == -1 ? '_' : (board[y][x] == 1 ? 'o' : ' '));
+            printf("%c ", board[y][x] == -1 ? 'O' : (board[y][x] == 1 ? 'X' : '.'));
         }
         printf("\n");
     }
