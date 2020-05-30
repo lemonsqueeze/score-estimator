@@ -27,6 +27,13 @@ if ! [ -d "pachi" ]; then
     echo ""
 fi
 
+if ! [ -d "pachi_gtp" ]; then
+    echo "setting up pachi gtp estimator..."
+    git clone 'https://github.com/lemonsqueeze/score-estimator' pachi_gtp
+    ( cd pachi_gtp  &&  git checkout pachi_gtp  &&  ln -s ../../src/pachi .   )
+    echo ""
+fi
+
 
 # Get & compile Pachi
 ( cd ../src
