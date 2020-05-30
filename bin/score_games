@@ -22,11 +22,12 @@ for f in *.sgf ; do
     echo "$f"
 
     out=`basename "$f" .sgf`.$est
+    log=`basename "$f" .sgf`.${est}.log
     if [ "$overwrite" != "y" ] && [ -f $out ]; then
 	echo "skipping";  continue;
     fi
 
-    $dir/bin/sgf_estimator $est "$f" | tee "$out" | grep :
+    $dir/bin/sgf_estimator $est "$f"  2>"$log" | tee "$out" | grep :
     
     echo ""
 done
