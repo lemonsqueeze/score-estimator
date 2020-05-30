@@ -110,6 +110,8 @@ int other_color(int color)
 }
 
 #define coord_xy(x, y)  ((y) * boardsize + (x))
+#define coord_x(c)      ((c) % boardsize)
+#define coord_y(c)      ((c) / boardsize)
 
 int str2coord(char *str)
 {
@@ -157,6 +159,41 @@ void print_board(int *board)
 	} \
 } while(0)
 
+int
+group_liberties_(int coord, int color, int *map, int n, int max_libs)
+{
+	foreach_neighbor(coord, {
+		if (!board[c] && !map[c]) {  /* new lib */
+			map[c] = 1;
+			if (++n >= max_libs)  return n;
+		}
+	});
+
+	foreach_neighbor(coord, {
+		if (board[c] == color && !map[c]) {
+			map[c] = -1;
+			n = group_liberties_(c, color, map, n, max_libs);
+			if (n >= max_libs)  return n;
+		}
+	});
+	return n;
+}
+
+int
+group_liberties(int coord, int *libs, int max_libs)
+{
+	int map[19*19] = { 0, };
+	int color = board[coord];
+	assert(color);
+	int n = group_liberties_(coord, color, map, 0, max_libs);
+
+	int i = 0;
+	for (int c = 0; c < boardsize2; c++) {
+		if (map[c] == 1)
+			libs[i++] = c;
+	}
+	return n;
+}
 
 void read_board(FILE *f, int *board)
 {
@@ -362,6 +399,84 @@ float board_official_score_details(int *dead, int ndead,
 	return komi + handi_comp + scores[S_WHITE] - scores[S_BLACK];
 }
 
+bool
+border_stone(int coord, int *final_ownermap)
+{
+	int color = board[coord];
+	foreach_neighbor(coord, {
+		if (board[c] == other_color(color) &&
+		    final_ownermap[c] == other_color(color))
+			return true;
+	});
+	return false;
+}
+
+bool
+board_position_final(float official_score, int *final_ownermap, int dames,
+		     float score_est, int nunclear,
+		     char **msg)
+{
+	//*msg = "too early to pass";
+	//if (b->moves < board_earliest_pass(b))
+	//	return false;
+	
+	/* Unclear groups ? */
+	*msg = "unclear groups";
+	if (nunclear)  return false;
+
+	/* Border stones in atari ? */
+	for (int c = 0; c < boardsize2; c++) { // foreach_point()
+		if (!board[c])  continue;
+		int lib[10];
+		if (group_liberties(c, lib, 2) > 1)  continue;
+		if (!border_stone(c, final_ownermap))  continue;
+		int g = c;
+
+		int color = board[c];
+		foreach_neighbor(lib[0], {
+			if (final_ownermap[c] != color) continue;
+			static char buf[100];
+			sprintf(buf, "border stones in atari at %i-%i", coord_x(g), coord_y(g));
+			*msg = buf;
+			return false;
+		});
+	}
+
+	/* Non-seki dames surrounded by only dames / border / one color are no dame to me,
+	 * most likely some territories are still open ... */
+	for (int c = 0; c < boardsize2; c++) {
+		if (final_ownermap[c] != 3)  continue;
+
+		int dame = c;
+		int around[4] = { 0, };
+		foreach_neighbor(dame, {
+			around[final_ownermap[c]]++;
+		});
+		if (around[S_BLACK] + around[3] == 4 ||
+		    around[S_WHITE] + around[3] == 4) {
+			static char buf[100];
+			sprintf(buf, "non-final position at %i-%i", coord_x(dame), coord_y(dame));
+			*msg = buf;
+			return false;
+		}
+	}
+
+	/* If ownermap and official score disagree position is likely not final.
+	 * If too many dames also. */
+	int max_dames = (board_large() ? 15 : 7);
+	*msg = "non-final position: too many dames";
+	if (dames > max_dames)    return false;
+	
+	/* Can disagree up to dame points, as long as there are not too many.
+	 * For example a 1 point difference with 1 dame is quite usual... */
+	int max_diff = MIN(dames, 4);
+	*msg = "non-final position: score est and official score don't agree";
+	if (fabs(official_score - score_est) > max_diff)  return false;
+	
+	return true;
+}
+
+
 /* Check position is final and safe to score:
  * No unclear groups and official chinese score and score est agree. */
 static bool
@@ -370,31 +485,15 @@ game_safe_to_score(float score_est,
 		   char **msg)
 {
 	/* Get chinese-rules official score. */
-	int dame;
+	int dames;
 	int final_ownermap[19 * 19];
 	enum go_ruleset saved_rules = rules;
 	if (rules == RULES_JAPANESE)  rules = RULES_AGA;  /* Can't compare japanese and chinese scores */
-	float  official_score = board_official_score_details(dead, ndead, &dame, final_ownermap);
+	float  official_score = board_official_score_details(dead, ndead, &dames, final_ownermap);
 	rules = saved_rules;
 	
-	/* Unclear groups ? */
-	*msg = "unclear groups";
-	if (nunclear)  return false;
-	
-	/* Don't go to counting if position is not final.
-	 * If score est and official score disagree position is likely not final.
-	 * If too many dames also. */
-	int max_dames = (board_large() ? 20 : 7);
-	*msg = "too many dames";
-	if (dame > max_dames)         return false;
-
-	/* Can disagree up to dame points, as long as there are not too many.
-	 * For example a 1 point difference with 1 dame is quite usual... */
-	int max_diff = MIN(dame, 4);
-	*msg = "score est and official chinese score don't agree";
-	if (fabs(official_score - score_est) > max_diff)  return false;
-	
-	return true;
+	return board_position_final(official_score, final_ownermap, dames,
+				    score_est, nunclear, msg);
 }
 
 
