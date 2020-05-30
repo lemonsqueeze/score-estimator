@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dir=`dirname "$0"`
+
+die() {  echo "$@"; exit 1;  }
+
+# Need Pachi and tools
+pdir="$dir/pachi"
+[ -d "$pdir" ]       || die "pachi directory not found. clone or symlink repo here first."
+[ -f "$pdir/pachi" ] || die "build pachi first (dcnn not needed)."
+
+cd $pdir
+exec ./pachi "$@"
